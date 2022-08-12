@@ -1,0 +1,246 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../Plantilla.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+
+    <ui:define name="content">
+        <h:head>
+            <title>Clientes</title>
+            <f:event listener="#{personaC.listar()}" type="preRenderView" />
+            <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+        </h:head>
+
+        <h:body>
+            <p:growl showDetail="true" id="messages" ></p:growl>
+            <center>
+                <h:form id="Opciones" style="font-size: 45px;font-weight: 900;color: #464df2;margin: 20px" >
+                    REGISTRO DE CLIENTE
+                    <br></br>
+                    <br></br>
+                    <p:commandButton icon="pi pi-user-plus" style="background-color: #53ef75; border-color:#53ef75; font-size: 25px" value="Registrar" oncomplete="PF('wdlgCliente').show();" />
+
+                </h:form>
+            </center>     
+            <h:form id="frmregistrar">
+                <p:dialog header="Registro del clientes" widgetVar="wdlgCliente" id="dlgClientes">
+                    <p:ajax event="close" listener="${personaC.limpiar()}" update="dlgClientes"/>
+
+                    <p:panelGrid columns="2">
+                        <p:outputLabel value="Nombre" for="idnombre"  />
+                        <p:inputText id="idnombre" label="Nombre" value="#{personaC.persona.nombre}" required="true" >
+                            <p:keyFilter regEx="/[A-z,' ']/" />
+                        </p:inputText>
+                        <p:outputLabel value="Apellidos" for="idapellido" />
+                        <p:inputText id="idapellido" value="#{personaC.persona.apellido}" required="true">
+                            <p:keyFilter regEx="/[A-z,' ',ñ]/" />
+                        </p:inputText>
+                        <p:outputLabel value="DNI " for="iddni" />
+                        <p:inputText id="iddni" value="#{personaC.persona.dni}" required="true" maxlength="8">
+                            <p:keyFilter regEx="/[0-9,.]/" />
+                            <f:validateLength  minimum="8"  maximum="8" />
+                        </p:inputText>
+                        <p:outputLabel value="CORREO" for="idcorreo"/>
+                        <p:inputText id="idcorreo" value="#{personaC.persona.correo}" required="true">
+                            <p:keyFilter regEx="/[A-z,1-9,' ',',',ñ,@,.]/" />
+                            <f:validator validatorId="correoV" />
+                        </p:inputText>
+                        <p:outputLabel value="CELULAR" for="idcelular"/>
+                        <p:inputText id="idcelular" value="#{personaC.persona.celular}" required="true" maxlength="9">
+                            <p:keyFilter regEx="/[0-9]/" />
+                            <f:validateLength  minimum="9"  maximum="9" />
+
+                        </p:inputText>
+
+                        <p:outputLabel value="DIRECCION" for="iddireccion"/>
+                        <p:inputText id="iddireccion" value="#{personaC.persona.dirreccion}" required="true">
+                            <p:keyFilter regEx="/[A-z,1-9,' ',',',ñ,.]/" />
+                        </p:inputText>
+                        <p:outputLabel value="DISTRITO,PROVINCIA,DEPARTAMENTO" for="idubigeo"/>
+                        <p:autoComplete id="idubigeo" value="#{personaC.persona.ubigeo}"  completeMethod="#{ubigeoC.completeTextUbigeo}" required="true" >
+
+                        </p:autoComplete>
+
+
+                    </p:panelGrid>
+
+                    <p:commandButton id="btnRegistrar" value="Registrar" actionListener="#{personaC.registrar()}"
+                                     update="frmregistrar :formtabla:tablaCli messages " style="margin: 25px; align: center; background-color: #53ef75; border-color:#53ef75">
+                        <p:confirm header="Confirmación" message="¿Deseas Registrar?" icon="ui-icon-alert"/>
+                    </p:commandButton>  
+                    <p:commandButton value="Cancelar" immediate="true" oncomplete="PF('wdlgCliente').hide();" style="background-color: #ff0000; border-color:#ff0000 " />
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+
+                    </p:confirmDialog>
+
+
+                </p:dialog>
+
+            </h:form>
+            <h:form id="formtabla" >
+
+                <p:dataTable id="tablaCli" var="lista" value="#{personaC.lstcCliente}" 
+                             rows="10" rowKey="#{lista.codigo}" selectionMode="single" selection="#{personaC.persona}"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                             rowsPerPageTemplate="5,10,15">
+                    <f:facet name="header">
+                        Listado de clientes por:
+
+                        <p:selectOneMenu id="idfiltrar" value="#{personaC.estado}">
+                            <f:selectItem itemLabel="Activos" itemValue="1"/>
+                            <f:selectItem itemLabel="Inactivos" itemValue="2"/>
+                            <f:selectItem itemLabel="Todos" itemValue="3"/> 
+                            <p:ajax listener="${personaC.listar()}" update="formtabla:tablaCli"/>
+
+                        </p:selectOneMenu>
+                        <p:ajax event="rowSelect" update="formtabla:context" /> 
+                        <div align="right">
+                            <p:commandButton value="Ver" style="margin: 25px;background-color: #ff0000; border-color:#ff0000" icon="pi pi-file-pdf" 
+                                             onclick="this.form.target = '_blank'" action="#{personaC.verReporte()}" ajax="false">
+
+
+                            </p:commandButton>
+                            <p:commandButton value="Descargar" style="margin: 25px;background-color: #ff0000; border-color:#ff0000" icon="pi pi-file-pdf" 
+                                             onclick="this.form.target = '_blank'" action="#{personaC.descargarReporte()}" ajax="false">
+
+
+                            </p:commandButton>
+
+                            <p:commandButton value="Reporte Excel">
+                                <p:dataExporter type="xls" target="formtabla:tablaCli" fileName="ClienteExcel"/>
+                            </p:commandButton>
+                        </div>
+                    </f:facet>
+                    <p:column headerText="Id" rendered="false">
+                        <h:outputText value="#{lista.codigo}" />
+                    </p:column>
+                    <p:column headerText="Nombres" width="90">
+                        <h:outputText value="#{lista.nombre}" />
+                    </p:column>
+
+                    <p:column headerText="Apellido" width="90">
+                        <h:outputText value="#{lista.apellido}" />
+                    </p:column>
+                    <p:column headerText="Dni" width="75">
+                        <h:outputText value="#{lista.dni}" />
+                    </p:column>
+                    <p:column headerText="Celular" width="85">
+                        <h:outputText value="#{lista.celular}" />
+                    </p:column>
+                    <p:column headerText="Correo" >
+                        <h:outputText value="#{lista.correo}" />
+                    </p:column>
+                    <p:column headerText="Direccion" >
+                        <h:outputText value="#{lista.dirreccion}" />
+                    </p:column>
+                    <p:column headerText="Estado" rendered="false" >
+                        <h:outputText value="#{lista.estado}" />
+                    </p:column>
+
+                    <p:column headerText="distrito,
+                              provincia,
+                              departamento" >
+                        <h:outputText value="#{lista.ubigeo}" />
+                    </p:column>
+
+
+                </p:dataTable>
+
+                <p:contextMenu for="tablaCli" id="context">
+                    <p:menuitem>
+                        <p:commandButton  value="Modificar" icon="pi pi-user-edit" oncomplete="PF('wdlgDatos').show(); "
+                                          update=":dlgDatos"/>
+                    </p:menuitem>
+                    <p:menuitem id="bEliminar" rendered="#{personaC.persona.estado == 'A' }" >
+                        <p:commandButton value="Eliminar" icon="pi pi-trash" actionListener="#{personaC.eliminar(personaC.persona)}" style="background-color: #ff0000; border-color:#ff0000" update="tablaCli messages ">
+                            <p:confirm header="Confirmación" message="¿Desea Eliminar?" icon="ui-icon-alert"/>
+                            <p:tooltip trackMouse="true"/>
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes"  icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                        </p:confirmDialog>
+                    </p:menuitem>
+
+                    <p:menuitem id="bRestaurar"  rendered="#{personaC.persona.estado == 'I'}">
+                        <p:commandButton value="Restaurar" icon="pi pi-info-circle" actionListener="#{personaC.restaurar(personaC.persona)}" style="background-color: #daa304; border-color:#daa304" update="tablaCli messages ">
+                            <p:confirm header="Confirmación" message="¿Desea Restaurar?" icon="ui-icon-alert"/>
+                            <p:tooltip trackMouse="true"/>
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes"  icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                        </p:confirmDialog>
+                    </p:menuitem>
+                </p:contextMenu>
+            </h:form>
+
+            <p:dialog header="Datos del Cliente" widgetVar="wdlgDatos" id="dlgDatos">
+                <h:form id="frmModificar">
+                    <p:panelGrid columns="2">
+
+                        <p:outputLabel value="Nombre" for="idnombre"  />
+                        <p:inputText id="idnombre" label="Nombre" value="#{personaC.persona.nombre}" required="true" >
+                            <p:keyFilter regEx="/[A-z,' ']/" />
+
+                        </p:inputText>
+                        <p:outputLabel value="Apellidos" for="idapellido" />
+                        <p:inputText id="idapellido" value="#{personaC.persona.apellido}" required="true">
+                            <p:keyFilter regEx="/[A-z,' ',ñ]/" />
+                        </p:inputText>
+                        <p:outputLabel value="DNI " for="iddni" />
+                        <p:inputText id="iddni" value="#{personaC.persona.dni}" required="true" maxlength="8">
+                            <p:keyFilter regEx="/[0-9]/" />
+                            <f:validateLength  minimum="8"  maximum="8" />
+
+                        </p:inputText>
+
+                        <p:outputLabel value="CORREO" for="idcorreo"/>
+                        <p:inputText id="idcorreo" value="#{personaC.persona.correo}" required="true">
+                            <p:keyFilter regEx="/[A-z,1-9,' ',',',ñ]/" />
+                            <f:validator validatorId="correoV" />
+                        </p:inputText>
+                        <p:outputLabel value="CELULAR" for="idcelular"/>
+                        <p:inputText id="idcelular" value="#{personaC.persona.celular}" required="true" maxlength="9">
+                            <p:keyFilter regEx="/[0-9]/" />
+                            <f:validateLength  minimum="9"  maximum="9" />
+                        </p:inputText>
+
+                        <p:outputLabel value="DIRECCION" for="iddireccion"/>
+                        <p:inputText id="iddireccion" value="#{personaC.persona.dirreccion}" required="true">
+                            <p:keyFilter regEx="/[A-z,1-9,' ',',',ñ]/" />
+                        </p:inputText>
+                        <p:outputLabel value="DISTRITO,PROVINCIA,DEPARTAMENTO" for="idubigeo"/>
+                        <p:autoComplete id="idubigeo" value="#{personaC.persona.ubigeo}"  completeMethod="#{ubigeoC.completeTextUbigeo}" required="true" >
+
+                        </p:autoComplete>
+                    </p:panelGrid>
+
+                    <p:commandButton id="btnModificar" value="Modificar" style="margin: 25px; align: center; background-color: #53ef75; border-color:#53ef75" actionListener="#{personaC.modificar()}"
+                                     update="frmModificar :formtabla:tablaCli messages" 
+                                     oncomplete="if(!args.validationFailed)PF('wdlgDatos').hide();">
+                        <p:confirm header="Confirmación" message="¿Deseas Modificar?" icon="pi pi-user-edit"/>
+                    </p:commandButton>  
+                    <p:commandButton value="Cancelar" immediate="true" oncomplete="PF('wdlgDatos').hide();" />
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                    </p:confirmDialog>
+
+                </h:form>
+
+
+            </p:dialog>
+
+        </h:body>
+    </ui:define>
+
+</ui:composition>

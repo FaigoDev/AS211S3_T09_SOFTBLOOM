@@ -1,0 +1,289 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="../Plantilla.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <h:head>
+            <title>Producto</title>
+            <event listener="#{compraC.limpiar()}" type="preRenderView" />
+            <f:event listener="#{producto.listar()}" type="preRenderView" />
+            <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+        </h:head>
+        <h:body>
+
+            <p:growl showDetail="true" id="messages" ></p:growl>
+           
+                <h:form id="Opciones">                     
+                    <h3 style="font-size: 45px;font-weight: 900;color: #464df2;margin: 20px" align="center">REGISTRO DE PRODUCTOS</h3>
+                    
+                    <p:commandButton icon="pi pi-user-plus" style="background-color: #2ADB9D; border-color:#2ADB9D; font-size: 25px; left: 44%; height: 44%" value="Registrar" oncomplete="PF('wdlgProducto').show();" />
+
+
+                </h:form>
+
+                               
+                <h:form id="frmregistrar" >
+            <p:dialog header="Registro del producto" widgetVar="wdlgProducto" id="dlgProducto" width="800">
+                <p:ajax event="close" listener="${producto.limpiar()}" update="dlgProducto"/>
+
+                    <p:panelGrid columns="3">
+
+                        <p:outputLabel value="Producto" for="idproducto"  />
+                        <p:inputText id="idproducto" label="Producto" value="#{producto.pro.NOMPRO}" required="true"  requiredMessage="Debes ingresar el nombre del producto">
+                            <p:keyFilter regEx="/[A-z,' ']/" />
+                            <p:ajax  update="msgproducto" delay="800" event="keyup" />
+                        </p:inputText>
+                        <p:message id="msgproducto" for="idproducto"/>
+
+                        <p:outputLabel value="Tipo" for="idtippro"/>
+                        <p:selectOneMenu id="idtippro" value="#{producto.pro.TIPPRO}" style="width:300px" 
+                                         filter="true" filterMatchMode="contains" required="true" requiredMessage="Debes ingresar el tipo del producto" >
+                            <f:selectItem noSelectionOption="true" itemLabel="Seleccione" itemValue="#{null}"/>
+                            <f:selectItem itemLabel="Flor" itemValue="Flor"/>
+                            <f:selectItem itemLabel="Bouquet" itemValue="Bouquet"/>
+                            <f:selectItem itemLabel="Colonia" itemValue="Colonia"/>
+                            <f:selectItem itemLabel="Chocolate" itemValue="Chocolate"/>
+                            <f:selectItem itemLabel="Accesorio" itemValue="Accesorio"/>
+                            <f:selectItem itemLabel="Perfume" itemValue="Perfume"/>
+                            <f:selectItem itemLabel="Ramo Floral" itemValue="Ramo Floral"/>
+                            <f:selectItem itemLabel="Peluche" itemValue="Peluche"/>
+                            <f:selectItem itemLabel="Rosa" itemValue="Rosa"/>
+                            <p:ajax  update="msgproductotipo" delay="800" event="keyup" />    
+
+                        </p:selectOneMenu>
+                        <p:message id="msgproductotipo" for="idtippro"/>
+
+                        <p:outputLabel value="Precio s/" for="idprecio" />
+                        <p:inputNumber id="idprecio" value="#{producto.pro.PREPRO}" required="true" minValue="0.10" maxValue="999" requiredMessage="Debes ingresar el precio del productos">
+                            <p:keyFilter regEx="/[0-9,.]/" />
+                            <p:ajax  update="msgproductoprecio" delay="800" event="keyup" />    
+                        </p:inputNumber>
+                        <p:message id="msgproductoprecio" for="idprecio"/>
+
+
+
+
+                        <p:outputLabel value="Descripcion" for="iddes"/>
+                        <p:inputText id="iddes" value="#{producto.pro.DESPRO}" required="true" requiredMessage="Debes ingresar la descripcion del producto">
+                            <p:keyFilter regEx="/[A-z,0-9,' ',',',ñ]/" />
+                            <p:ajax  update="msgproductodes" delay="800" event="keyup" />    
+                        </p:inputText>
+                        <p:message id="msgproductodes" for="iddes"/>
+
+
+
+
+                        <p:outputLabel value="STOCK" for="idstock"/>
+                        <p:inputNumber id="idstock" value="#{producto.pro.STOCKPRO}" required="true" minValue="1" maxValue="999" requiredMessage="Debes ingresar el stock del producto">
+                            <p:ajax  update="msgproductostock" delay="800" event="keyup" />    
+                        </p:inputNumber>
+                        <p:message id="msgproductostock" for="idstock"/>
+
+
+
+                        <p:outputLabel value="Proveedor" for="idprov"/>
+                        <p:autoComplete id="idprov" value="#{producto.pro.prov.RAZSOCPROV}"  completeMethod="#{producto.completeTextProveedor}" required="true" requiredMessage="Debes ingresar el proveedor del producto">
+                            <p:ajax  update="msgproductoprov" delay="800" event="keyup" />    
+                        </p:autoComplete>
+                        <p:message id="msgproductoprov" for="idprov"/>
+
+
+                    </p:panelGrid>
+
+                    <p:commandButton id="btnRegistrar" value="Registrar" actionListener="#{producto.registrar()}"
+                                     update="frmregistrar :formtabla:tablaPro messages" style="margin: 25px; align: center; background-color: #2ADB9D; border-color:#2ADB9D">
+                        <p:confirm header="Confirmación" message="¿Deseas Registrar?" icon="ui-icon-alert"/>
+                    </p:commandButton>  
+                    <p:commandButton value="Cancelar" immediate="true" oncomplete="PF('wdlgProducto').hide();" style="background-color: #ff0000; border-color:#ff0000 "/>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                    </p:confirmDialog>
+
+
+            </p:dialog>
+                    
+                </h:form>
+
+            <h:form id="formtabla" >
+                <a href="producto.xhtml"></a>
+                <p:dataTable id="tablaPro" var="lista" value="#{producto.listadopro}" rowKey="#{lista.IDPRO}"
+                             rows="10"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                             rowsPerPageTemplate="5,10,15" selectionMode="single" selection="#{producto.pro}">
+                    <p:ajax event="rowSelect" update="formtabla:context" /> 
+                    <f:facet name="header">
+                        Listado de producto:
+
+                        <p:selectOneMenu id="idfiltrar" value="#{producto.estado}" autoWidth="" >
+                            <f:selectItem itemLabel="Activos" itemValue="1"/>
+                            <f:selectItem itemLabel="Inactivos" itemValue="2"/>
+                            <f:selectItem itemLabel="Todos" itemValue="3"/> 
+                            <p:ajax listener="${producto.listar()}" update="formtabla:tablaPro"/>
+                        </p:selectOneMenu>
+                        <div align="right">
+                            <p:commandButton value="Ver" style="margin: 25px;background-color: #ff0000; border-color:#ff0000" icon="pi pi-file-pdf" 
+                                             onclick="this.form.target = '_blank'" action="#{producto.verReporte()}" ajax="false">
+                                
+
+                            </p:commandButton>
+                            <p:commandButton value="Descargar" style="margin: 25px;background-color: #ff0000; border-color:#ff0000" icon="pi pi-file-pdf" 
+                                             onclick="this.form.target = '_blank'" action="#{producto.descargarReporte()}" ajax="false">
+                                
+
+                            </p:commandButton>
+
+                            <p:commandButton value="Reporte en EXCEL" style="background-color: #2ADB9D; border-color:#2ADB9D" icon="pi pi-file-excel">
+                                <p:dataExporter type="xls" target="formtabla:tablaPro" fileName="CatalogoDeProductos"/>
+                            </p:commandButton>
+                        </div>
+                    </f:facet>
+                    <p:column headerText="Id" rendered="false">
+                        <h:outputText value="#{lista.IDPRO}" />
+                    </p:column>
+                    <p:column headerText="Nombre Producto">
+                        <h:outputText value="#{lista.NOMPRO}" />
+                    </p:column>
+
+                    <p:column headerText="Tipo" width="100">
+                        <h:outputText value="#{lista.TIPPRO}" />
+                    </p:column>
+                    <p:column headerText="Precio" width="70">
+                        <h:outputText value="#{lista.PREPRO}" />
+                    </p:column>
+                    <p:column headerText="Descripcion">
+                        <h:outputText value="#{lista.DESPRO}" />
+                    </p:column>
+                    <p:column headerText="Stock" width="70">
+                        <h:outputText value="#{lista.STOCKPRO}" />
+                    </p:column>
+                    <p:column headerText="Estado" rendered="false">
+                        <h:outputText value="#{lista.ESTPRO}" />
+                    </p:column>
+                    <p:column headerText="Proveedor / RUC">
+                        <h:outputText value="#{lista.prov.RAZSOCPROV}" />
+                    </p:column> 
+                </p:dataTable>
+                <p:contextMenu for="tablaPro" id="context">
+                    <p:menuitem>
+                        <p:commandButton  value="Modificar" icon="pi pi-user-edit" oncomplete="PF('wdlgDatos').show(); "
+                                          update=":dlgDatos"/>
+                    </p:menuitem>
+                    <p:menuitem id="bEliminar" rendered="#{producto.pro.ESTPRO == 'A' }" >
+                        <p:commandButton value="Eliminar" icon="pi pi-trash" actionListener="#{producto.eliminar(producto.pro)}" style="background-color: #ff0000; border-color:#ff0000" update="tablaPro messages ">
+                            <p:confirm header="Confirmación" message="¿Desea Eliminar?" icon="ui-icon-alert"/>
+                            <p:tooltip trackMouse="true"/>
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes"  icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                        </p:confirmDialog>
+                    </p:menuitem>
+
+                    <p:menuitem id="bRestaurar"  rendered="#{producto.pro.ESTPRO == 'I'}">
+                        <p:commandButton value="Restaurar" icon="pi pi-info-circle" actionListener="#{producto.restaurar(producto.pro)}" style="background-color: #daa304; border-color:#daa304" update="tablaPro messages ">
+                            <p:confirm header="Confirmación" message="¿Desea Restaurar?" icon="ui-icon-alert"/>
+                            <p:tooltip trackMouse="true"/>
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes"  icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                        </p:confirmDialog>
+                    </p:menuitem>
+                </p:contextMenu>
+
+            </h:form>
+
+            <p:dialog header="Datos del producto" widgetVar="wdlgDatos" id="dlgDatos" width="800">
+                <p:ajax event="close" listener="${producto.limpiar()}" update="dlgDatos"/>
+                <h:form id="frmModificar">
+                    <p:panelGrid columns="3">
+
+                        <p:outputLabel value="Producto" for="idproducto"  />
+                        <p:inputText id="idproducto" label="Producto" value="#{producto.pro.NOMPRO}" required="true"  requiredMessage="Debes ingresar el nombre del producto">
+                            <p:keyFilter regEx="/[A-z,' ']/" />
+                            <p:ajax  update="msgproducto" delay="800" event="keyup" />
+                        </p:inputText>
+                        <p:message id="msgproducto" for="idproducto"/>
+
+                        <p:outputLabel value="Tipo" for="idtippro"/>
+                        <p:selectOneMenu id="idtippro" value="#{producto.pro.TIPPRO}" style="width:300px" 
+                                         filter="true" filterMatchMode="contains" required="true" requiredMessage="Debes ingresar el tipo del producto" >
+                            <f:selectItem noSelectionOption="true" itemLabel="Seleccione" itemValue="#{null}"/>
+                            <f:selectItem itemLabel="Flor" itemValue="Flor"/>
+                            <f:selectItem itemLabel="Bouquet" itemValue="Bouquet"/>
+                            <f:selectItem itemLabel="Colonia" itemValue="Colonia"/>
+                            <f:selectItem itemLabel="Chocolate" itemValue="Chocolate"/>
+                            <f:selectItem itemLabel="Accesorio" itemValue="Accesorio"/>
+                            <f:selectItem itemLabel="Perfume" itemValue="Perfume"/>
+                            <f:selectItem itemLabel="Ramo Floral" itemValue="Ramo Floral"/>
+                            <f:selectItem itemLabel="Peluche" itemValue="Peluche"/>
+                            <f:selectItem itemLabel="Rosa" itemValue="Rosa"/>
+                            <p:ajax  update="msgproductotipo" delay="800" event="keyup" />    
+
+                        </p:selectOneMenu>
+                        <p:message id="msgproductotipo" for="idtippro"/>
+
+                        <p:outputLabel value="Precio s/" for="idprecio" />
+                        <p:inputNumber id="idprecio" value="#{producto.pro.PREPRO}" required="true" minValue="0.10" maxValue="999" requiredMessage="Debes ingresar el precio del producto">
+                            <p:keyFilter regEx="/[0-9,.]/" />
+                            <p:ajax  update="msgproductoprecio" delay="800" event="keyup" />    
+                        </p:inputNumber>
+                        <p:message id="msgproductoprecio" for="idprecio"/>
+
+
+
+
+                        <p:outputLabel value="Descripcion" for="iddes"/>
+                        <p:inputText id="iddes" value="#{producto.pro.DESPRO}" required="true" requiredMessage="Debes ingresar la descripcion del producto">
+                            <p:keyFilter regEx="/[A-z,0-9,' ',',',ñ]/" />
+                            <p:ajax  update="msgproductodes" delay="800" event="keyup" />    
+                        </p:inputText>
+                        <p:message id="msgproductodes" for="iddes"/>
+
+
+
+
+                        <p:outputLabel value="STOCK" for="idstock"/>
+                        <p:inputNumber id="idstock" value="#{producto.pro.STOCKPRO}" required="true" minValue="1" maxValue="999" requiredMessage="Debes ingresar el stock del producto">
+                            <p:ajax  update="msgproductostock" delay="800" event="keyup" />    
+                        </p:inputNumber>
+                        <p:message id="msgproductostock" for="idstock"/>
+
+
+
+                        <p:outputLabel value="Proveedor" for="idprov"/>
+                        <p:autoComplete id="idprov" value="#{producto.pro.prov.RAZSOCPROV}"  completeMethod="#{producto.completeTextProveedor}" required="true" requiredMessage="Debes ingresar el proveedor del producto">
+                            <p:ajax  update="msgproductoprov" delay="800" event="keyup" />    
+                        </p:autoComplete>
+                        <p:message id="msgproductoprov" for="idprov"/>
+
+
+                    </p:panelGrid>
+
+                    <p:commandButton id="btnModificar" value="Modificar" style="margin: 25px; align: center; background-color: #53ef75; border-color:#53ef75" actionListener="#{producto.modificar()}"
+                                     update="frmModificar :formtabla:tablaPro messages" >
+                        <p:confirm header="Confirmación" message="¿Deseas Modificar?" icon="pi pi-user-edit"/>
+                    </p:commandButton>  
+                    <p:commandButton value="Cancelar" immediate="true" oncomplete="PF('wdlgDatos').hide();" style="background-color: #ff0000; border-color:#ff0000 "/>
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                    </p:confirmDialog>
+
+                </h:form>
+
+
+            </p:dialog>
+
+        </h:body>
+    </ui:define>
+
+</ui:composition>

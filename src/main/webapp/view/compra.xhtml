@@ -1,0 +1,229 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../Plantilla.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <h:head>
+            <title>Clientes</title>
+            <event listener="#{compraC.limpiar()}" type="preRenderView" />
+            <event listener="#{producto.limpiar()}" type="preRenderView" />
+            <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+        </h:head>
+        <h:body>
+            <p:growl showDetail="true" id="messages" ></p:growl>
+
+            <h:form>                     
+                <h3 align="center" style="font-size: 45px;font-weight: 900;color: #464df2;margin: 20px">REGISTRO DE COMPRAS</h3>
+
+            </h:form>
+
+
+            <center>
+                <p:dialog header="Registro del producto" widgetVar="wdlgProducto" id="dlgProducto" width="800">
+                    <p:ajax event="close" listener="${producto.limpiar()}" update="dlgProducto"/>
+                    <p:ajax event="open" listener="${producto.limpiar()}" update="dlgProducto"/>
+                    <h:form id="frmregistrar" >
+                        <p:panelGrid columns="3">
+
+                            <p:outputLabel value="Producto" for="idproducto"  />
+                            <p:inputText id="idproducto" label="Producto" value="#{producto.pro.NOMPRO}" required="true"  requiredMessage="Debes ingresar el nombre del producto">
+                                <p:keyFilter regEx="/[A-z,' ']/" />
+                                <p:ajax  update="msgproducto" delay="800" event="keyup" />
+                            </p:inputText>
+                            <p:message id="msgproducto" for="idproducto"/>
+
+                            <p:outputLabel value="Tipo" for="idtippro"/>
+                            <p:selectOneMenu id="idtippro" value="#{producto.pro.TIPPRO}" style="width:300px" 
+                                             filter="true" filterMatchMode="contains" required="true" requiredMessage="Debes ingresar el tipo del producto" >
+                                <f:selectItem noSelectionOption="true" itemLabel="Seleccione" itemValue="#{null}"/>
+                                <f:selectItem itemLabel="Flor" itemValue="Flor"/>
+                                <f:selectItem itemLabel="Bouquet" itemValue="Bouquet"/>
+                                <f:selectItem itemLabel="Colonia" itemValue="Colonia"/>
+                                <f:selectItem itemLabel="Chocolate" itemValue="Chocolate"/>
+                                <f:selectItem itemLabel="Accesorio" itemValue="Accesorio"/>
+                                <f:selectItem itemLabel="Perfume" itemValue="Perfume"/>
+                                <f:selectItem itemLabel="Ramo Floral" itemValue="Ramo Floral"/>
+                                <f:selectItem itemLabel="Peluche" itemValue="Peluche"/>
+                                <f:selectItem itemLabel="Rosa" itemValue="Rosa"/>
+                                <p:ajax  update="msgproductotipo" delay="800" event="keyup" />    
+
+                            </p:selectOneMenu>
+                            <p:message id="msgproductotipo" for="idtippro"/>
+
+                            <p:outputLabel value="Precio s/" for="idprecio" />
+                            <p:inputNumber id="idprecio" value="#{producto.pro.PREPRO}" required="true" minValue="0.10" maxValue="999" requiredMessage="Debes ingresar el precio del productos">
+                                <p:keyFilter regEx="/[0-9,.]/" />
+                                <p:ajax  update="msgproductoprecio" delay="800" event="keyup" />    
+                            </p:inputNumber>
+                            <p:message id="msgproductoprecio" for="idprecio"/>
+
+
+
+
+                            <p:outputLabel value="Descripcion" for="iddes"/>
+                            <p:inputText id="iddes" value="#{producto.pro.DESPRO}" required="true" requiredMessage="Debes ingresar la descripcion del producto">
+                                <p:keyFilter regEx="/[A-z,0-9,' ',',',ñ]/" />
+                                <p:ajax  update="msgproductodes" delay="800" event="keyup" />    
+                            </p:inputText>
+                            <p:message id="msgproductodes" for="iddes"/>
+
+
+
+
+                            <p:outputLabel value="STOCK" for="idstock"/>
+                            <p:inputNumber id="idstock" value="#{producto.pro.STOCKPRO}" required="true" minValue="1" maxValue="999" requiredMessage="Debes ingresar el stock del producto">
+                                <p:ajax  update="msgproductostock" delay="800" event="keyup" />    
+                            </p:inputNumber>
+                            <p:message id="msgproductostock" for="idstock"/>
+
+
+
+                            <p:outputLabel value="Proveedor" for="idprov"/>
+                            <p:autoComplete id="idprov" value="#{producto.pro.prov.RAZSOCPROV}"  completeMethod="#{producto.completeTextProveedor}" required="true" requiredMessage="Debes ingresar el proveedor del producto">
+                                <p:ajax  update="msgproductoprov" delay="800" event="keyup" />    
+                            </p:autoComplete>
+                            <p:message id="msgproductoprov" for="idprov"/>
+
+
+                        </p:panelGrid>
+
+                        <p:commandButton id="btnRegistrar" value="Registrar" action="#{producto.registrar()}"
+                                         update="frmregistrar  messages" style="margin: 25px; align: center; background-color: #2ADB9D; border-color:#2ADB9D">
+                            <p:confirm header="Confirmación" message="¿Deseas Registrar?" icon="ui-icon-alert"/>
+                        </p:commandButton>  
+                        <p:commandButton value="Cancelar" immediate="true" oncomplete="PF('wdlgProducto').hide();" style="background-color: #ff0000; border-color:#ff0000 "/>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes"  icon="ui-icon-check"/>
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                        </p:confirmDialog>
+
+                    </h:form>
+
+                </p:dialog>
+                <center>
+                    <h:form id="form" >
+
+
+
+
+                        <p:panelGrid columns="2" styleClass="buttonPanel"> 
+                            <p:commandButton icon="pi pi-plus-circle" style="background-color: #2ADB9D; border-color:#2ADB9D; font-size: 15px" value="Nuevo Producto" oncomplete="PF('wdlgProducto').show();" />
+
+
+
+                            <p:panelGrid columns="4">
+
+
+
+                                <p:outputLabel value="Metodo de Pago" for="idmetpag"  />
+                                <p:selectOneMenu id="idmetpag" value="#{compraC.com.METPAGCOM}" autoWidth="" >
+                                    <f:selectItem itemLabel="Transferencia bancaria" itemValue="TB"/>
+                                    <f:selectItem itemLabel="Pago en efectivo" itemValue="PP"/>
+
+                                </p:selectOneMenu>
+
+                                <p:outputLabel value="Proveedor" for="idprov"/>
+                                <p:autoComplete id="idprov" value="#{compraC.com.proveedor.RAZSOCPROV}"  completeMethod="#{producto.completeTextProveedor}" required="true">    
+                                </p:autoComplete>
+
+
+                                <p:outputLabel value="Date" for="iddatcom" />
+                                <p:calendar maxdate="@now" id="iddatcom" style="width:auto" label="Compra" value="#{compraC.com.FECCOM}"  required="true" requiredMessage="Debes ingresar la fecha de compra"></p:calendar>
+
+
+
+                                <p:outputLabel value="Producto" for="idpro"/>
+                                <p:autoComplete id="idpro" value="#{compraC.comdet.producto.NOMPRO}" completeMethod="#{producto.completeTextProducto}" required="true" requiredMessage="Debes ingresar el nombre del producto">
+                                    <p:ajax event="blur" update="idstock"/> 
+                                </p:autoComplete>
+
+                                <p:outputLabel value="Precio s/" for="idprecio" />
+                                <p:inputNumber id="idprecio" value="#{compraC.comdet.PRECOMPRO}"  required="true" minValue="0.10" maxValue="999" requiredMessage="Debes ingresar el precio del producto"> 
+                                </p:inputNumber>
+
+
+                                <p:outputLabel value="Cantidad" for="idcanpro"/>
+                                <p:inputNumber id="idcanpro" value="#{compraC.comdet.CANPRO}" required="true" minValue="1" maxValue="999" requiredMessage="Debes ingresar la cantidad del producto">
+                                    <p:ajax event="blur" update="idstock" listener="#{compraC.sumaStock()}"/>
+                                </p:inputNumber>
+
+
+
+                                <p:outputLabel value="Stock"/>
+                                <p:outputLabel value="#{compraC.comdet.producto.STOCKPRO}" id="idstock"/>
+
+                            </p:panelGrid>
+                        </p:panelGrid>
+
+                        <p:commandButton id="btnAgregar" value="Agregar" actionListener="#{compraC.agregarFila()}" icon="pi pi-plus"
+                                         update="idprecio messages formdet:tablaDetalle formdet:idpretot form" delay="500" style="margin: 35px;background-color: #2ADB9D; border-color:#2ADB9D; font-size: 25px">
+                        </p:commandButton>  
+
+                    </h:form>
+                </center>
+                <h:form id="formdet">
+                    <p:dataTable var="tbldet" id="tablaDetalle" value="#{compraC.listadocomdet}"
+                                 rows="5">
+
+
+                        <p:column headerText="PRODUCTO" >
+                            <h:outputLabel value="#{tbldet.producto.NOMPRO}" />
+                        </p:column>
+
+                        <p:column headerText="PRECIO">
+                            <h:outputText value="#{tbldet.PRECOMPRO}"/>
+                        </p:column>
+                        <p:column headerText="CANTIDAD">
+                            <h:outputText value="#{tbldet.CANPRO}">
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="STOCK">
+                            <h:outputText value="#{tbldet.producto.STOCKPRO}">
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="SUBTOTAL">
+                            <h:outputText value="#{tbldet.SUBTOTCOM}">
+                            </h:outputText>
+                        </p:column>
+
+                        <p:column headerText="Eliminar">
+                            <p:commandButton style="margin: auto;background-color: #ff0000; border-color:#ff0000" actionListener="#{compraC.eliminarfila(tbldet)}" update="tablaDetalle formdet:idpretot messages" icon="pi pi-trash" />
+                        </p:column>
+
+                    </p:dataTable>
+
+                    <p:panelGrid columns="2" id="idpretot">
+                        <p:outputLabel value="Precio Total" style="font-size: 25px; font-weight: 900; color: #69707a "/>
+                        <p:outputLabel value="#{compraC.com.PRETOTCOM}" style="font-size: 25px; font-weight: 900; color: #69707a" />
+                    </p:panelGrid>
+
+                    <p:commandButton id="btnRegistrar" icon="pi pi-shopping-bag" value="Comprar" actionListener="#{compraC.registrar()}"
+                                     update="messages tablaDetalle idpretot form:iddatcom dlgProducto" style="margin: 35px;background-color: #2ADB9D; border-color:#2ADB9D; font-size: 25px">
+
+                        <p:confirm  header="                 Confirmación" message="            ¿Deseas Registrar?" icon="ui-icon-alert"/>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" style="margin: 35px;background-color: #2ADB9D; border-color:#2ADB9D" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                            <p:commandButton value="No" style="margin: 35px;background-color: #ff0000; border-color:#ff0000" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+                        </p:confirmDialog>
+                    </p:commandButton>  
+
+
+
+
+                </h:form>
+
+            </center>
+
+
+
+
+
+        </h:body>
+    </ui:define>
+
+</ui:composition>

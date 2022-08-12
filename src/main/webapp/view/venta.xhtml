@@ -1,0 +1,188 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../Plantilla.xhtml"        
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+    <ui:define name="content">
+        <h:head>
+            <f:event listener="#{ventaC.listarVenta()}" type="preRenderView"/>
+            <f:event listener="#{personaC.listar()}" type="preRenderView" />
+            <f:event listener="#{producto.listar()}" type="preRenderView" />
+            <title>Venta</title>
+        </h:head>
+
+        <center>
+            <p:growl showDetail="true" id="messages">
+                <p:autoUpdate/>
+            </p:growl>
+        </center>
+
+        <h:body>
+            <center>
+
+                <h:form style="font-size: 45px;font-weight: 900;color: #464df2">  
+                    REGISTRO DE VENTAS    
+                </h:form>
+            </center>
+
+            <center>
+                <h:form id="frmVenta">
+                    <p:panelGrid columns="2" styleClass="ui-noborder">
+
+                        <p:outputLabel value="Persona" for="per" />
+                        <p:selectOneMenu id="per" value="#{ventaC.venta.persona.codigo}" style="width:300px"
+                                         filter="true" filterMatchMode="contains" required="true" requiredMessage="Elige el Cliente" >
+                            <f:selectItem noSelectionOption="true" itemLabel="Seleccione" itemValue="#{null}"/>
+                            <f:selectItems value="#{personaC.lstcCliente}" var="cliente"
+                                           itemValue="#{cliente.codigo}"
+                                           itemLabel="#{cliente.nombre}
+                                           #{cliente.apellido}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Producto" for="pro"/>
+                        <p:selectOneMenu id="pro" value="#{ventaC.ventadetalle.producto.IDPRO}" style="width:300px" 
+                                         filter="true" filterMatchMode="contains" required="true" requiredMessage="Elige el Producto" >
+                            <f:selectItem noSelectionOption="true" itemLabel="Seleccione" itemValue="#{null}"/>
+                            <f:selectItems value="#{producto.listadopro}" var="produc"
+                                           itemValue="#{produc.IDPRO}"
+                                           itemLabel="#{produc.TIPPRO} #{produc.NOMPRO} #{produc.PREPRO} #{produc.DESPRO} #{produc.STOCKPRO}"/>
+                        </p:selectOneMenu>
+
+
+                        <p:outputLabel  value="Cantidad" for="cantidad" />
+                        <p:spinner id="cantidad" value="#{ventaC.ventadetalle.CANVENDET}" required="true" requiredMessage="Elige la Cantidad"  max="50" min="1"
+                                   maxlength="2" style="width: 165px">
+                        </p:spinner>
+
+                        <p:outputLabel value="Tipo de pago" />
+                        <p:selectOneMenu id="tipo" value="#{ventaC.venta.TIPVEN}"  required="true" requiredMessage="Elige el tipo" >
+                            <f:selectItem itemLabel="Presencial" itemValue="L"/>  
+                            <f:selectItem itemLabel="Delivery" itemValue="D"/>  
+
+                        </p:selectOneMenu>
+
+
+                        <p:outputLabel value="Metetodo de Pago"  />
+                        <p:selectOneMenu id="pago" value="#{ventaC.venta.METPAGVEN}"  required="true" requiredMessage="Elige el Método de Pago" >
+                            <f:selectItem itemLabel="Efectivo" itemValue="EF"/>  
+                            <f:selectItem itemLabel="Yape" itemValue="WP"/>    
+                            <f:selectItem itemLabel="Plin" itemValue="TB"/>  
+                            <f:selectItem itemLabel="Depósito" itemValue="ML"/>  
+
+                        </p:selectOneMenu>
+
+
+                        <p:outputLabel value="Fecha" for="fecha" />
+                        <p:calendar id="fecha" value="#{ventaC.venta.FECVEN}"
+                                    pattern="dd/MM/yyyy" navigator="true" locale="de" maxdate="@now"
+                                    required="true" requiredMessage="Ingrese la fecha" size="18">
+                        </p:calendar>
+                    </p:panelGrid>
+                    <center>
+                        <p/>
+                        <p:commandButton value="Nuevo" actionListener="#{ventaC.limpiar()}" update="frmVenta" />
+                        <p:commandButton value="Agregar" actionListener="#{ventaC.adicionarFila()}" update="frmVenta :frmVentaDetalle"  icon="pi pi-plus" />
+                        <p:commandButton value="Anular" actionListener="#{ventadC.anular()}" update="frmVenta" icon="pi pi-times" style="font-weight:bold; font-size:16px"/>
+                    </center>
+                </h:form>
+            </center>
+            <!--            Fin del Formulario Producto-->
+            <p:spacer height="0"/>
+
+
+            <!--                    listado de Producto     -->
+            <h:form id="frmVentaDetalle">
+                <center>
+                    <p:dataTable var="vendet" id="tablaVentaDetalle" value="#{ventaC.listadoVentaDetalle}"
+                                 emptyMessage="Agrega productos" style="width: 80%;"
+                                 editable="true" editMode="cell" editInitEvent="dblclick">
+                        <!--                    <p:column style="width:80px; color:black" headerText="ID">
+                                                <h:outputText value="#{vendet.IDPRO}"/>
+                                            </p:column>-->
+                        <p:column style="width:80px; color:black" headerText="TIPO">
+                            <h:outputText value="#{vendet.TIPPRO}"/>
+                        </p:column>
+                        <p:column style="width:80px; color:black" headerText="NOMBRE">
+                            <h:outputText value="#{vendet.NOMPRO}"/>
+                        </p:column>
+                        <p:column style="width:80px; color:black" headerText="DESCRIPCIÓN">
+                            <h:outputText value="#{vendet.DESPRO}"/>
+                        </p:column>
+                        <p:column style="width:80px; color:black" headerText="STOCK">
+                            <h:outputText value="#{vendet.STOCKPRO}"/>
+                        </p:column>
+                        <p:column style="width:80px; color:black" headerText="CANTIDAD">
+                            <h:outputText value="#{vendet.CANVENDET}"/>
+                        </p:column>
+                        <p:column style="width:80px; color:black" headerText="PRECIO">
+                            <h:outputText value="#{vendet.producto.PREPRO}"/>
+                        </p:column>
+                        <p:column style="width:50px; color:black" headerText="SUBTOTAL">
+                            <h:outputText value="#{vendet.SUBVENDET}">
+                                <f:convertNumber type="currency" currencySymbol="S/. " minFractionDigits="2"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="" style="width:20px; color:black" exportable="false">
+                            <p:column>
+                                <p:commandButton icon="pi pi-trash" actionListener="${ventaC.eliminarFila(vendet)}" update="frmVentaDetalle"/>
+                            </p:column>
+                        </p:column>
+                    </p:dataTable>
+                </center>
+                <p:separator/>
+                <h:panelGrid id="total" columns="2" style="font-size: 25px; margin: 0 auto; color: black">
+                    TOTAL = 
+                    <h:outputText style="align-content: center; alignment-adjust: central; font-weight:bold"
+                                  value="#{ventaC.venta.PRETOTVEN}">
+                        <f:convertNumber type="currency" currencySymbol="S/ " minFractionDigits="2"/>
+                    </h:outputText>
+                </h:panelGrid>
+                <p:separator/>
+            </h:form>     
+
+
+
+
+            <h:form id="frmListaVenta">
+                <center>
+                    <p:panelGrid columns="5">
+                        <p:outputLabel value="Realizar Venta"/>
+                        <p:commandButton id="Registrar" actionListener="#{ventaC.registrarVenta()}" value="Registrar" icon="pi pi-save  "
+                                         style="margin: 20px; align: center; background-color: #53ef75; border-color:#53ef75" update=":frmVenta :frmVentaDetalle :frmListaVenta">
+                            <p:confirm header="Confirmación" message="¿Deseas Registrar?" icon="pi pi-exclamation-triangle"/>
+                        </p:commandButton>
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times"/>
+                        </p:confirmDialog>
+                    </p:panelGrid>
+                </center>
+                <p:separator/>
+                <center>
+                    <p:fieldset legend="LISTA DE VENTAS" toggleable="true" style="align-content: center; width: 70%">
+                        
+                    </p:fieldset>
+                </center>
+            </h:form>
+
+
+            <h:form id="form">
+                <p:confirmPopup style="margin: initial" global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Si" type="button" styleClass="ui-confirm-popup-yes" icon="pi pi-check" async="true"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-confirm-popup-no" icon="pi pi-times"/>
+                </p:confirmPopup>
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times"/>
+                </p:confirmDialog>
+            </h:form>
+
+        </h:body>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../Plantilla.xhtml"   
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <h:head>
+            <title>Clientes</title>
+            <f:event listener="#{compraC.listar()}" type="preRenderView" />
+
+            <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+        </h:head>
+
+        <h:body>
+            <p:growl showDetail="true" id="messages" ></p:growl>
+           
+                <h:form id="Opciones"  >                     
+                    <h3 align="center" style="font-size: 45px;font-weight: 900;color: #464df2;margin: 20px">CONSULTA DE COMPRAS</h3>
+                            </h:form>
+
+                                
+            
+                <h:form id="frmregistrar" >       
+
+                    <p:dataTable id="tblCompra" var="lista" value="#{compraC.listadocomp}" emptyMessage="Se tiene la lista sin ventas"
+                                 selectionMode="single" selection="#{compraC.com}" rowKey="#{lista.IDCOM}" sortBy="#{lista}"
+                                 rows="5"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                 rowsPerPageTemplate="5,10,15">
+                        <f:facet name="header"><p style="font-size:20px "><b>Compras Realizadas</b></p></f:facet>
+                        <p:ajax event="rowSelect" listener="#{compraC.onRowSelect}" update="frmregistrar:tblDetalle" />
+                        <p:column headerText="ID" rendered="false">
+                            <h:outputText value="#{lista.IDCOM}" />
+                        </p:column>
+                        <p:column headerText="FECHA">
+                            <h:outputText value="#{lista.FECHA}" />
+                        </p:column>         
+                        <p:column headerText="METODO DE PAGO">
+                            <h:outputText value="#{lista.METPAGCOM}" >
+                                <f:converter converterId="convertMetodo"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="PRECIO TOTAL S/">
+                            <h:outputText value="#{lista.PRETOTCOM}" />
+                        </p:column> 
+
+                    </p:dataTable>
+                    <br/>
+                    <p:dataTable id="tblDetalle" var="tbldet" value="#{compraC.listadocomdet}"  emptyMessage="Se tiene la lista sin detalle">
+                        <f:facet name="header"><p style="font-size:20px "><b>Detalle de las compras</b></p></f:facet>
+                        <p:column headerText="PRODUCTO">
+                            <h:outputText value="#{tbldet.producto.NOMPRO}" />
+                        </p:column>
+                        <p:column headerText="CANTIDAD">
+                            <h:outputText value="#{tbldet.CANPRO}" />
+                        </p:column>
+                        <p:column headerText="PRECIO S/">
+                            <h:outputText value="#{tbldet.PRECOMPRO}" />
+                        </p:column>
+                        <p:column headerText="SUBTOTAL S/">
+                            <h:outputText value="#{tbldet.SUBTOTCOM}" />
+                        </p:column>                                        
+                    </p:dataTable>
+
+
+
+                </h:form>
+            
+
+
+        </h:body>
+    </ui:define>
+
+</ui:composition>

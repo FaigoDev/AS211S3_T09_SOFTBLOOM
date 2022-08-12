@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../Plantilla.xhtml"   
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="content">
+        <h:head>
+            <title>Clientes</title>
+            <f:event listener="#{ventaC.listarVenta()}" type="preRenderView" />
+
+            <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+        </h:head>
+
+        <h:body>
+            <p:growl showDetail="true" id="messages" ></p:growl>
+
+            <h:form id="Opciones"  >                     
+                <h3 align="center" style="font-size: 45px;font-weight: 900;color: #464df2;margin: 20px">CONSULTA DE VENTAS</h3>
+            </h:form>
+
+
+
+            <h:form id="form" >       
+                <center>
+                    <p:dataTable var="lista" id="Listaventa" value="#{ventaC.listaVenta}"
+                                 rows="5" paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                 rowsPerPageTemplate="5,10,15,20" style="width: 90%;" selectionMode="single" selection="#{ventaC.venta}" rowKey="#{lista.IDVEN}"  >
+                        <f:facet name="header">
+                            <div style="float:right">
+                                <p:commandButton value="EXCEL" icon="pi pi-file-excel" styleClass="rounded-button ui-button-secondary" >
+                                    <p:dataExporter type="xls" target=":frmListaVenta:Listaventa" fileName="Lista de Ventas_XLS" options="#{ventaC.excel}"/>
+                                </p:commandButton>
+                            </div>
+                        </f:facet>
+                        <f:facet name= "header"><center style="color:black; font-weight:bold; font-size:25px">LISTA DE VENTAS</center></f:facet>
+
+                        <p:ajax event="rowSelect" listener="#{ventaC.onRowSelect}" update="form:tblDetalle" />
+                        
+                        <p:column  headerText="ID" sortBy="#{lista.IDVEN}" filterBy="#{lista.IDVEN}" rendered="false">
+                            <h:outputText value="#{lista.IDVEN}"/>
+                        </p:column>
+                        <p:column  headerText="CLIENTE" sortBy="#{lista.persona.nombre}" filterBy="#{lista.persona.nombre}">
+                            <h:outputText value="#{lista.persona.nombre}"/>
+                        </p:column>
+                        <p:column  headerText="DNI" sortBy="#{lista.persona.dni}" filterBy="#{lista.persona.dni}">
+                            <h:outputText value="#{lista.persona.dni}"/>
+                        </p:column>
+
+                        <p:column  headerText="FECHA" sortBy="#{lista.FECVEN}" filterBy="#{lista.FECVEN}">
+                            <h:outputText value="#{lista.FECVEN}">                              
+                            </h:outputText>
+                        </p:column>      
+                        <p:column  headerText="TOTAL" sortBy="#{lista.PRETOTVEN}" filterBy="#{lista.PRETOTVEN}">
+                            <h:outputText value="#{lista.PRETOTVEN}">                              
+                            </h:outputText>
+                        </p:column>  
+                        <f:facet name="footer">
+                            <center style="color: black; font-weight:bold; font-size: 20px">
+                            </center>
+                        </f:facet>
+                    </p:dataTable>
+
+                    <br/>
+                    
+                    <p:dataTable id="tblDetalle" var="tbldet" value="#{ventaC.listadoVentaDetalle}"  emptyMessage="Se tiene la lista sin detalle">
+                        <f:facet name="header"><p style="font-size:20px "><b>Detalle de las compras</b></p></f:facet>
+                        <p:column  headerText="Producto" >
+                            <h:outputText value="#{tbldet.producto.NOMPRO}">                              
+                            </h:outputText>
+                        </p:column> 
+                        
+                        <p:column  headerText="Cantidad" >
+                            <h:outputText value="#{tbldet.CANVENDET}">                              
+                            </h:outputText>
+                        </p:column> 
+                        
+                        <p:column  headerText="Sub Total" >
+                            <h:outputText value="#{tbldet.SUBVENDET}">                              
+                            </h:outputText>
+                        </p:column> 
+                    </p:dataTable>
+                </center>
+            </h:form>
+
+
+
+        </h:body>
+    </ui:define>
+
+</ui:composition>
