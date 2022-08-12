@@ -31,7 +31,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
+          
+        #sonar.qualitygate.wait=true
   execution-test:
     needs: [sonar-test]
     runs-on: ubuntu-20.04
