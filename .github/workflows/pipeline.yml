@@ -34,7 +34,7 @@ jobs:
   #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   execution-test:
-    needs: [sonar-test]
+    # needs: [sonar-test]
     runs-on: ubuntu-20.04
     steps:
       - name: Descargar ultimo cambio de rama
