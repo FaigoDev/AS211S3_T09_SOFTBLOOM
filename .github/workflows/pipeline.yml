@@ -1,0 +1,74 @@
+name: pipeline - SoftBloom
+#Configurar Disparador (on:)
+
+on:
+  push:
+    branches: [main]
+  
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+  builds-reduncy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: cancelar penultimo build
+        uses: styfle/cancel-workflow-action@0.10.0
+        with:
+          access_token: ${{github.token}}
+
+  # sonar-test:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - name: Descargar ultimo cambio de rama
+  #       uses: actions/checkout@v3.0.2
+  #       with:
+  #         fetch-depth: 0
+  #     - name: Dando permiso chmod +x mvnw
+  #       run: chmod +x mvnw
+  #     - name: SonarCloud Scan
+  #       run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=${{secrets.PROJECT_KEY}}
+  #       env:
+  #         GITHUB_TOKEN: ${{ github.token }}
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  execution-test:
+    needs: [sonar-test]
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Descargar ultimo cambio de rama
+        uses: actions/checkout@v3.0.2
+        with:
+          fetch-depth: 0
+      - name: Instalacion y Configuracion de jdk11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' 
+          java-version: '11'
+          server-id: github
+          settings-path: ${{github.workspaces}}
+          cache: "maven"
+      - name: Ejecucion de Test
+        run: mvn -B test --f pom.xml
+
+  generation-builds: 
+    needs: [execution-test]
+    runs-on: ubuntu-20.04
+    if: ${{github.event_name == 'push'}}
+    steps:
+      - name: Descargar ultimo cambio de rama
+        uses: actions/checkout@v3.0.2
+        with:
+          fetch-depth: 0
+      - name: Instalacion y Configuracion de jdk11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' 
+          java-version: '11'
+          server-id: github
+          settings-path: ${{github.workspaces}}
+          cache: "maven"
+      # Generando Artefacto
+      - name: Generar artefacto
+        run: mvn -B package -DskipTests --f pom.xml
