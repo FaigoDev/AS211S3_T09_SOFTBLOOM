@@ -51,6 +51,7 @@ jobs:
       - name: Ejecucion de Test
         run: mvn -B test --f pom.xml
 
+
   generation-builds: 
     needs: [execution-test]
     runs-on: ubuntu-20.04
