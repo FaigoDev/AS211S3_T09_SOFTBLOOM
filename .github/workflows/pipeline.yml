@@ -25,8 +25,6 @@ jobs:
         uses: actions/checkout@v3.0.2
         with:
           fetch-depth: 0
-      - name: Dando permiso chmod +x mvnw
-        run: chmod +x mvnw
       - name: SonarCloud Scan
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=${{secrets.PROJECT_KEY}}
         env:
