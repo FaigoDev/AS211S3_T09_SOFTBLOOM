@@ -27,7 +27,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: SonarCloud Scan
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.projectKey=${{secrets.PROJECT_KEY}}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=${{secrets.PROJECT_KEY}}
         env:
           GITHUB_TOKEN: ${{ github.token }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
