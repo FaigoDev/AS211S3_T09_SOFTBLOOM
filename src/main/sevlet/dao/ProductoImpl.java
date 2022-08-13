@@ -1,7 +1,7 @@
-package dao;
-
+package sevlet.dao;
 
 import java.util.List;
+import sevlet.model.Producto;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-import model.Producto;
 
 public class ProductoImpl extends conexion implements ICRUD<Producto> {
 

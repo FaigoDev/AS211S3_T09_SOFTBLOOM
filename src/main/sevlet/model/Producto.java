@@ -1,6 +1,4 @@
-package model;
-
-
+package sevlet.model;
 
 public class Producto {
     private int IDPRO;

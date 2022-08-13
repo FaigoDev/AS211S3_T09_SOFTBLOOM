@@ -1,5 +1,4 @@
-package model;
-
+package sevlet.model;
 
 import lombok.Data;
 

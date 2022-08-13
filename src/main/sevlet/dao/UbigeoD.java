@@ -1,5 +1,4 @@
-package dao;
-
+package sevlet.dao;
 
 import java.util.logging.Level;
 import java.util.logging.LogManager;

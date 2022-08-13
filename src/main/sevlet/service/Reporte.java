@@ -1,7 +1,7 @@
-package service;
+package sevlet.service;
 
-
-import dao.conexion;
+import sevlet.dao.conexion;
+import static sevlet.dao.conexion.conectar;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
