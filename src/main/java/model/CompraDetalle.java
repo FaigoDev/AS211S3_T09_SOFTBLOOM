@@ -1,4 +1,6 @@
-package sevlet.model;
+package model;
+
+
 
 public class CompraDetalle {
     private int IDCOMDET;

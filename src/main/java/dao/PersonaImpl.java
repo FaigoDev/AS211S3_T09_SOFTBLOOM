@@ -1,14 +1,15 @@
-package sevlet.dao;
+package dao;
+
 
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.List;
-import sevlet.model.Persona;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import model.Persona;
 
 public class PersonaImpl extends conexion implements ICRUD<Persona> {
 

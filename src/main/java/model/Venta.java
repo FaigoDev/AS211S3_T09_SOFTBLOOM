@@ -1,4 +1,5 @@
-package sevlet.model;
+package model;
+
 
 import java.util.Date;
 import java.util.GregorianCalendar;

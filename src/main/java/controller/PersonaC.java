@@ -1,19 +1,19 @@
-package sevlet.controller;
+package controller;
 
+import dao.PersonaImpl;
+import dao.UbigeoD;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-import sevlet.dao.PersonaImpl;
-import sevlet.dao.UbigeoD;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import sevlet.model.Persona;
+import model.Persona;
 import org.primefaces.PrimeFaces;
-import sevlet.service.Reporte;
+import service.Reporte;
 
 @Named(value = "personaC")
 @SessionScoped

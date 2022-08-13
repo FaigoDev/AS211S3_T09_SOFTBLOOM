@@ -1,6 +1,6 @@
-package sevlet.controller;
+package controller;
 
-import sevlet.dao.ProductoImpl;
+import dao.ProductoImpl;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
@@ -10,9 +10,9 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import sevlet.model.Producto;
+import model.Producto;
 import org.primefaces.PrimeFaces;
-import sevlet.service.Reporte;
+import service.Reporte;
 
 @Named(value = "producto")
 @SessionScoped

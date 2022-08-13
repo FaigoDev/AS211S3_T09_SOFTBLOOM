@@ -1,4 +1,4 @@
-package sevlet.model;
+package model;
 
 public class Proveedor {
 

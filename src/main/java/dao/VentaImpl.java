@@ -1,10 +1,8 @@
-package sevlet.dao;
+package dao;
 
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-import sevlet.dao.conexion;
-import sevlet.dao.ICRUD;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,10 +12,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import sevlet.model.Persona;
-import sevlet.model.Producto;
-import sevlet.model.Venta;
-import sevlet.model.VentaDetalle;
+import model.Persona;
+import model.Producto;
+import model.Venta;
+import model.VentaDetalle;
 
 public class VentaImpl extends conexion {     
     DateFormat formato = new SimpleDateFormat("yyyy/MM/dd");

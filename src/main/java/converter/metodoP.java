@@ -1,33 +1,35 @@
-package sevlet.converter;
+
+package converter;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-@FacesConverter("convertTipo")
+@FacesConverter("convertMetodo")
 
-public class tipoP implements Converter{
+public class metodoP implements Converter{
 
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String valor) {
-
+       
         return valor;
-
+       
     }
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object valor) {
-        String tipoCompra = "";
+   String tipoMetodo = "";
         if(valor != null){
-            tipoCompra = (String) valor;
-            switch(tipoCompra){
-                case "N": tipoCompra ="Nacional"; break;
-                case "L": tipoCompra ="Local"; break;
+            tipoMetodo = (String) valor;
+            switch(tipoMetodo){
+                case "TB": tipoMetodo ="Transferencia Bancaria"; break;
+                case "PE": tipoMetodo ="Pago Efectivo"; break;
             }
 
             
     }
-        return tipoCompra;
+        return tipoMetodo;
     }
+    
 }

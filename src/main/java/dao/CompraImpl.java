@@ -1,4 +1,4 @@
-package sevlet.dao;
+package dao;
 
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -11,8 +11,8 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import sevlet.model.Compra;
-import sevlet.model.CompraDetalle;
+import model.Compra;
+import model.CompraDetalle;
 
 public class CompraImpl extends conexion implements ICRUD<Compra> {
 

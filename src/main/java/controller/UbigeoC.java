@@ -1,15 +1,14 @@
-package sevlet.controller;
+package controller;
 
+import dao.UbigeoD;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-import sevlet.dao.UbigeoD;
 import java.io.Serializable;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
-import sevlet.model.Ubigeo;
-
+import model.Ubigeo;
 @Named(value = "ubigeoC")
 @SessionScoped
 public class UbigeoC implements Serializable {

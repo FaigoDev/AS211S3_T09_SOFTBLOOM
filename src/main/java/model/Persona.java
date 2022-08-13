@@ -1,4 +1,4 @@
-package sevlet.model;
+package model;
 
 public class Persona {
     // Mi modelo persona que tiene los mismos atributos que mi tabla de BD Persona

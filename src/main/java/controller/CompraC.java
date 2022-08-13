@@ -1,10 +1,10 @@
-package sevlet.controller;
+package controller;
 
+import dao.CompraImpl;
+import dao.ProductoImpl;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
-import sevlet.dao.CompraImpl;
-import sevlet.dao.ProductoImpl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,10 +13,10 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import sevlet.model.Compra;
-import sevlet.model.CompraDetalle;
+import model.Compra;
+import model.CompraDetalle;
+import model.Producto;
 import org.primefaces.event.SelectEvent;
-import sevlet.model.Producto;
 
 
 @Named(value = "compraC")
