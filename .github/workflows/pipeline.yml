@@ -27,11 +27,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: SonarCloud Scan
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=${{secrets.PROJECT_KEY}} -Dsonar.qualitygate.wait=true
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=${{secrets.PROJECT_KEY}} -Dsonar.qualitygate.wait=true -Dsonar.qualitygate=calidad-softbloom
         env:
           GITHUB_TOKEN: ${{ github.token }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        timeout-minutes: 5
           
         #sonar.qualitygate.wait=true
   execution-test:
