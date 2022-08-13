@@ -90,3 +90,4 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "app-softbloom" #Must be unique in Heroku
           heroku_email: "flavio.illanes@vallegrande.edu.pe"
+      - run: heroku ps:scale web=1
