@@ -73,3 +73,19 @@ jobs:
       # Generando Artefacto
       - name: Generar artefacto
         run: mvn -B package -DskipTests --f pom.xml
+
+  deploy-heroku:
+      needs: [generation-builds]
+      runs-on: ubuntu-20.04
+      if: ${{github.event_name == 'push'}}
+      steps: 
+      - name: Descargar ultimo cambio de rama
+        uses: actions/checkout@v3.0.2
+        with:
+          fetch-depth: 0
+      - name: Deploy Heroku-App
+        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "app-softbloom" #Must be unique in Heroku
+          heroku_email: "flavio.illanes@vallegrande.edu.pe"
