@@ -52,7 +52,7 @@ jobs:
   #       run: mvn -B test --f pom.xml
 
   generation-builds: 
-    needs: [execution-test]
+    #needs: [execution-test]
     runs-on: ubuntu-20.04
     if: ${{github.event_name == 'push'}}
     steps:
