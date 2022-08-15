@@ -71,7 +71,6 @@ jobs:
       - name: Generar artefacto
         run: mvn -B package -DskipTests --f pom.xml
 
-
   deploy-heroku:
       needs: [generation-builds]
       runs-on: ubuntu-20.04
