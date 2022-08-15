@@ -89,4 +89,4 @@ jobs:
           heroku_email: "flavio.illanes@vallegrande.edu.pe"
 
 
-      - run: deploy target/AS211S3_T09_SOFTBLOOM-1.0-SNAPSHOT.war --app app-softbloom
+      #- run: deploy target/AS211S3_T09_SOFTBLOOM-1.0-SNAPSHOT.war --app app-softbloom
