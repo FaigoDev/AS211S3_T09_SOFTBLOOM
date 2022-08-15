@@ -18,8 +18,7 @@ jobs:
         with:
           access_token: ${{github.token}}
 
-
-   sonar-test:
+  sonar-test:
      runs-on: ubuntu-20.04
      steps:
        - name: Descargar ultimo cambio de rama
