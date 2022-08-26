@@ -1,6 +1,7 @@
 name: pipeline - SoftBloom
 #Configurar Disparador (on:)
 
+
 on:
   push:
     branches: [main]
